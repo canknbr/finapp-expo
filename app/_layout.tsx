@@ -16,8 +16,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import 'react-native-reanimated';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { UserInactivityProvider } from '@/context/InactivityContext';
 
+const queryClient = new QueryClient();
 WebBrowser.maybeCompleteAuthSession();
 SplashScreen.preventAutoHideAsync();
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
@@ -60,7 +62,7 @@ const InitialLayout = () => {
     if (!isLoaded) return;
     const inAuthGroup = segments[0] === '(auth)';
     if (isSignedIn && !inAuthGroup) {
-      router.replace('(auth)/(tabs)/home');
+      router.replace('(auth)/(modals)/lock');
     } else if (!isSignedIn) {
       router.replace('/');
     }
@@ -146,6 +148,45 @@ const InitialLayout = () => {
           headerShown: false,
         }}
       />
+        <Stack.Screen
+        name="(auth)/(modals)/lock"
+        options={{
+          headerShown: false,
+        }}
+      />
+        <Stack.Screen
+        name="(auth)/(modals)/account"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="(auth)/crypto/[id]"
+        options={{
+          headerLargeTitle: true,
+          headerTransparent: true,
+
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={34} color={Colors.dark} />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity>
+                <Ionicons
+                  name="notifications-outline"
+                  size={30}
+                  color={Colors.dark}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Ionicons name="star-outline" size={30} color={Colors.dark} />
+              </TouchableOpacity>
+            </View>
+          ),
+        }}
+      />
       <Stack.Screen
         name="verify/[phone]"
         options={{
@@ -169,10 +210,14 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <StatusBar style="light" />
-        <InitialLayout />
-      </GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <UserInactivityProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="light" />
+          <InitialLayout />
+        </GestureHandlerRootView>
+        </UserInactivityProvider>
+      </QueryClientProvider>
     </ClerkProvider>
   );
 };

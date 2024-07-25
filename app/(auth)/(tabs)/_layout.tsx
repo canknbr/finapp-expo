@@ -11,11 +11,11 @@ const Layout = () => {
         tabBarActiveTintColor: Colors.primary,
         tabBarBackground: () => (
           <BlurView
-            intensity={100}
-            tint={'extraLight'}
+            intensity={50}
+
             style={{
               flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
+              backgroundColor: 'rgba(0,0,0,0.1)',
             }}
           />
         ),
@@ -28,7 +28,8 @@ const Layout = () => {
           elevation: 0,
           borderTopWidth: 0,
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{
@@ -62,7 +63,9 @@ const Layout = () => {
         name="crypto"
         options={{
           title: 'Crypto',
-          tabBarIcon: ({ size, color }) => <FontAwesome name="bitcoin" size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => (
+            <FontAwesome name="bitcoin" size={size} color={color} />
+          ),
           header: () => <CustomHeader />,
           headerTransparent: true,
         }}
@@ -71,7 +74,9 @@ const Layout = () => {
         name="lifestyle"
         options={{
           title: 'Lifestyle',
-          tabBarIcon: ({ size, color }) => <FontAwesome name="th" size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => (
+            <FontAwesome name="th" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

@@ -7,8 +7,10 @@ import { useBalanceStore } from '@/store/balanceStore';
 import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
 import WidgetList from '@/components/SortableList/WidgetList';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const Page = () => {
+  const headerHeight = useHeaderHeight();
   const { balance, runTransaction, transactions, clearTransactions } =
     useBalanceStore();
   const onAddMoney = () => {
@@ -20,7 +22,12 @@ const Page = () => {
     });
   };
   return (
-    <ScrollView style={{ backgroundColor: Colors.background }}>
+    <ScrollView
+      style={{ backgroundColor: Colors.background }}
+      contentContainerStyle={{
+        paddingTop: headerHeight,
+      }}
+    >
       <View style={styles.account}>
         <View style={styles.row}>
           <Text style={styles.balance}>{balance()}</Text>
@@ -60,7 +67,7 @@ const Page = () => {
               <View style={{ flex: 1 }}>
                 <Text style={{ fontWeight: '500' }}>{item.title}</Text>
                 <Text style={{ color: Colors.gray, fontSize: 12 }}>
-                  {item.date.toLocaleDateString()}
+                  {item.date.toLocaleString()}
                 </Text>
               </View>
               <Text>₺{item.amount}</Text>
@@ -69,7 +76,7 @@ const Page = () => {
         })}
       </View>
       <Text style={defaultStyles.sectionHeader}>Widgets</Text>
-      <WidgetList/>
+      <WidgetList />
     </ScrollView>
   );
 };
@@ -88,11 +95,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   balance: {
-    fontSize: 50,
+    fontSize: 90,
     fontWeight: 'bold',
   },
   currency: {
-    fontSize: 20,
+    fontSize: 50,
     fontWeight: '500',
   },
   actionRow: {
